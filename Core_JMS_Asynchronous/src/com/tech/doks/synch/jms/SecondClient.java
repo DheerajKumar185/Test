@@ -1,5 +1,8 @@
 package com.tech.doks.synch.jms;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
@@ -24,7 +27,12 @@ public class SecondClient {
 			MessageProducer producer = session.createProducer(destination);
 			producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 			//Create a Message
-			String text = "Synchronization --> Hello World from " + Thread.currentThread().getName();
+			BufferedReader r = new BufferedReader( new FileReader( "testing.txt" ) );
+			String text = "", line = null;
+			while ((line = r.readLine()) != null) {
+				text += line;
+			}
+//			String text = "Synchronization --> Hello World from " + Thread.currentThread().getName();
 			TextMessage message = session.createTextMessage(text);
 			System.out.println("Sent message " + message.hashCode() + " : " + Thread.currentThread().getName());
 			producer.send(message);
